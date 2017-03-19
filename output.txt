@@ -1,0 +1,13 @@
+rotleft
+movright
+drop
+movleft
+movleft
+movleft
+movleft
+movleft
+drop
+rotright
+drop
+rotleft
+drop

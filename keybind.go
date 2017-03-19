@@ -1,48 +1,35 @@
 package main
 
 import (
-	"github.com/k0kubun/termbox-go"
+	"os"
+	"bufio"
+	"time"
 )
 
 func waitKeyInput() {
-	for {
-		switch ev := termbox.PollEvent(); ev.Type {
-		case termbox.EventKey:
-			if ev.Ch == 'q' || ev.Key == termbox.KeyCtrlC || ev.Key == termbox.KeyCtrlD {
-				return
-			} else {
-				if clock.lock {
-					continue
-				} else if clock.gameover {
-					if ev.Key == termbox.KeySpace {
-						initGame()
-						clock.start()
-					}
-					continue
-				} else if clock.paused {
-					if ev.Ch == 'p' {
-						clock.start()
-					}
-					continue
-				}
+	file, err := os.Open("/home/saurabh/go-work/src/github.com/saurabhbatra96/nextgen-tetris/output.txt")
+	if (err != nil) {
+		panic(err)
+	}
+  defer file.Close()
 
-				if ev.Ch == 'p' {
-					clock.pause()
-				} else if ev.Ch == 'z' {
-					currentMino.rotateLeft()
-				} else if ev.Ch == 'x' || ev.Key == termbox.KeyArrowUp {
-					currentMino.rotateRight()
-				} else if ev.Key == termbox.KeySpace {
-					currentMino.drop()
-				} else if ev.Key == termbox.KeyArrowDown {
-					currentMino.moveDown()
-				} else if ev.Key == termbox.KeyArrowLeft {
-					currentMino.moveLeft()
-				} else if ev.Key == termbox.KeyArrowRight {
-					currentMino.moveRight()
-				}
-			}
+	// logFile, logErr := os.Open("log.txt")
+
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if scanner.Text() == "rotleft" {
+			currentMino.rotateLeft()
+		} else if scanner.Text() == "rotright" {
+			currentMino.rotateRight()
+		} else if scanner.Text() == "movleft" {
+			currentMino.moveLeft()
+		} else if scanner.Text() == "movright" {
+			currentMino.moveRight()
+		} else if scanner.Text() == "drop" {
+			currentMino.drop()
 		}
+
 		refreshScreen()
 	}
 }
