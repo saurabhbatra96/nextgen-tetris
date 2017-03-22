@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-	"fmt"
 )
 
 const (
@@ -147,6 +146,5 @@ func main() {
 	initGame()
 	clock.start()
 	movesList()
-
-	fmt.Println(score)
+	// storeScore()
 }
