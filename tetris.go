@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"fmt"
 )
 
 const (
@@ -145,5 +146,7 @@ func main() {
 	}
 	initGame()
 	clock.start()
-	waitKeyInput()
+	movesList()
+
+	fmt.Println(score)
 }

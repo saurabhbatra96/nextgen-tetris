@@ -1,5 +1,0 @@
-rotleft
-rotright
-drop
-movleft
-movright
