@@ -145,6 +145,6 @@ func main() {
 	}
 	initGame()
 	clock.start()
-	movesList()
+	aiMoves()
 	// storeScore()
 }
