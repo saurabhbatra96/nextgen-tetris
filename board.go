@@ -10,7 +10,7 @@ const (
 	boardWidth        = 10
 	boardHeight       = 18
 	blankColor        = termbox.ColorBlack
-	animationDuration = 160
+	animationDuration = 10
 )
 
 type Board struct {
@@ -110,7 +110,9 @@ func (b *Board) setCell(cell *Cell) {
 
 func (b *Board) setCells(cells []*Cell) {
 	for _, cell := range cells {
-		b.setCell(cell)
+		if isOnBoard(cell.x, cell.y) {
+			b.setCell(cell)
+		}
 	}
 }
 

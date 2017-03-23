@@ -10,7 +10,7 @@ import (
 const (
 	levelMax         = 20
 	scoreMax         = 999999
-	gameoverDuration = 50
+	gameoverDuration = 10
 )
 
 var (
@@ -145,6 +145,8 @@ func main() {
 	}
 	initGame()
 	clock.start()
+	// movesList() // Our randomized bot
+	// greedyAiMoves() // Our greedy bot
 	aiMoves()
 	// storeScore()
 }
