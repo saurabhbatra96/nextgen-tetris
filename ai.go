@@ -60,20 +60,17 @@ func aiMoves() {
   defer f.Close()
 
   for !clock.gameover {
-    for i:=0; i<9; i++ {
-      currentMino.moveLeft()
-    }
 
     minMaxHeight := 18
     var optx, opttheta int
-    for i:=0; i<9; i++ {
 
-      var j int
-      // Movements
-      for j=0; j<3; j++ {
+    for j:=0; j<4; j++ {
+      for i:=0; i<10; i++ {
+        currentMino.moveLeft()
+      }
 
-        // Rotations
-
+      // Check for all columns.
+      for i:=0; i<10; i++ {
         dstMino := *currentMino
         dstMino.putBottom()
         h,maxHeight := 0,0
@@ -110,7 +107,6 @@ func aiMoves() {
           h = 0
         }
 
-
         if maxHeight<minMaxHeight {
           minMaxHeight = maxHeight
           optx = i
@@ -120,37 +116,110 @@ func aiMoves() {
           }
         }
 
-        testMino := *currentMino
-        testMino.forceRotateLeft()
-        if testMino.conflicts() {
-          break
-        }
-
-        currentMino.rotateLeft()
-        if _, err = f.WriteString("rotleft: "+strconv.Itoa(j)+"\n"); err != nil {
-          panic(err)
-        }
+        currentMino.moveRight()
       }
 
-      testMino := *currentMino
-      testMino.forceRotateLeft()
-      if !testMino.conflicts() {
-        currentMino.rotateLeft()
-      } else {
-        for z:=j;z>=0;z-- {
-          currentMino.rotateRight()
-        }
+      // After we're done checking, place mino somewhere in the middle.
+      for i:=0; i<4; i++ {
+        currentMino.moveLeft()
       }
-      if _, err = f.WriteString("movright\n"); err != nil {
-        panic(err)
-      }
-      currentMino.moveRight()
+
+      // Now it's safe to rotate the mino.
+      currentMino.rotateLeft()
     }
-
+    // for i:=0; i<5; i++ {
+    //   currentMino.moveLeft()
+    // }
+    //
+    // minMaxHeight := 18
+    // var optx, opttheta int
+    // for i:=0; i<9; i++ {
+    //
+    //   var j int
+    //   // Movements
+    //   for j=0; j<3; j++ {
+    //
+    //     // Rotations
+    //
+    //     dstMino := *currentMino
+    //     dstMino.putBottom()
+    //     h,maxHeight := 0,0
+    //
+    //     for k:=0;k<10;k++ {
+    //       for m:=17; m>=0; m-- {
+    //         if board.colors[k][m]!=blankColor {
+    //           if _, err = f.WriteString(strconv.Itoa(k)+","+strconv.Itoa(17-m)+" is colored.\t"); err != nil {
+    //             panic(err)
+    //           }
+    //           h = 18-m
+    //         }
+    //       }
+    //
+    //       maxCellHeight := 0
+    //
+    //       for _, cell := range dstMino.cells() {
+    //         if cell.x == k {
+    //           if 18-cell.y > maxCellHeight {
+    //             maxCellHeight = 18-cell.y
+    //           }
+    //         }
+    //       }
+    //       if maxCellHeight > 0 {
+    //         h = maxCellHeight
+    //       }
+    //       if _, err = f.WriteString(strconv.Itoa(h)+"\n"); err != nil {
+    //         panic(err)
+    //       }
+    //
+    //       if h>maxHeight {
+    //         maxHeight = h
+    //       }
+    //       h = 0
+    //     }
+    //
+    //
+    //     if maxHeight<minMaxHeight {
+    //       minMaxHeight = maxHeight
+    //       optx = i
+    //       opttheta = j
+    //       if _, err = f.WriteString(strconv.Itoa(minMaxHeight)+","+strconv.Itoa(optx)+","+strconv.Itoa(opttheta)+"\n"); err != nil {
+    //         panic(err)
+    //       }
+    //     }
+    //
+    //     testMino := *currentMino
+    //     testMino.forceRotateLeft()
+    //     if testMino.conflicts() {
+    //       break
+    //     }
+    //
+    //     currentMino.rotateLeft()
+    //     if _, err = f.WriteString("rotleft: "+strconv.Itoa(j)+"\n"); err != nil {
+    //       panic(err)
+    //     }
+    //   }
+    //
+    //   testMino := *currentMino
+    //   testMino.forceRotateLeft()
+    //   if !testMino.conflicts() {
+    //     currentMino.rotateLeft()
+    //   } else {
+    //     for z:=j;z>=0;z-- {
+    //       currentMino.rotateRight()
+    //     }
+    //   }
+    //   if _, err = f.WriteString("movright\n"); err != nil {
+    //     panic(err)
+    //   }
+    //   currentMino.moveRight()
+    // }
+    //
     // Fix position to original
+
     for i:=0; i<opttheta; i++ {
       currentMino.rotateLeft()
     }
+
 
     for i:=0; i<9; i++ {
       currentMino.moveLeft()
