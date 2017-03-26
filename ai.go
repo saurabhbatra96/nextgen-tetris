@@ -5,9 +5,12 @@ import (
 )
 
 func aiMoves() {
+  // Change the scope of these to global once genetic programming starts.
+  heightMult, lineMult := -1,8
+
   for !clock.gameover {
 
-    minMaxHeight := 18
+    maxCost := -1000
     var optx, opttheta int
 
     for j:=0; j<4; j++ {
@@ -19,7 +22,7 @@ func aiMoves() {
       for i:=0; i<11; i++ {
         dstMino := *currentMino
         dstMino.putBottom()
-        h,maxHeight := 0,0
+        h,maxHeight,numlines := 0,0,0
 
         for k:=0;k<10;k++ {
           for m:=17; m>=0; m-- {
@@ -36,6 +39,29 @@ func aiMoves() {
                 maxCellHeight = 18-cell.y
               }
             }
+
+            // Check if this row is a line.
+            for _, cell := range dstMino.cells() {
+              hasLine := true
+              for l:=0; l<10; l++ {
+                if cell.y>=0 && board.colors[l][cell.y]==blankColor && cell.x!=l {
+                  foundInMino := false
+                  for _, nestedCell := range dstMino.cells() {
+                    if nestedCell.y==cell.y && nestedCell.x==l {
+                      foundInMino = true
+                      break
+                    }
+                  }
+                  if !foundInMino {
+                    hasLine = false
+                  }
+                }
+              }
+
+              if hasLine {
+                numlines++
+              }
+            }
           }
           if maxCellHeight > 0 {
             h = maxCellHeight
@@ -47,8 +73,10 @@ func aiMoves() {
           h = 0
         }
 
-        if maxHeight<minMaxHeight {
-          minMaxHeight = maxHeight
+        cost := heightMult*maxHeight + lineMult*numlines
+
+        if cost>maxCost {
+          maxCost = cost
           optx = i
           opttheta = j
         }
@@ -82,7 +110,7 @@ func aiMoves() {
 
     currentMino.drop()
 
-    time.Sleep(100*time.Millisecond)
+    time.Sleep(1*time.Millisecond)
 
     refreshScreen()
   }
