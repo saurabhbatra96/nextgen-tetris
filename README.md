@@ -22,6 +22,11 @@ Bot that minimizes the maximum height at every step:
 * Number: 10049
 * Sum: 7300649
 
+Prev bot + awards line clears:
+* Average: 1382
+* Number: 9281
+* Sum: 12831920
+
 ## Tetris
 
 Shoutout to https://github.com/k0kubun/ for the Tetris shell!

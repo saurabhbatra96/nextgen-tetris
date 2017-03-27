@@ -6,7 +6,7 @@ import (
 )
 
 func storeScore() {
-  f, err := os.OpenFile("/home/saurabh/projects/tetris-data/ai", os.O_RDWR|os.O_APPEND, 0666)
+  f, err := os.OpenFile("/home/saurabh/projects/tetris-data/aionlylinesdata", os.O_RDWR|os.O_APPEND, 0666)
   if err != nil {
     panic(err)
   }
