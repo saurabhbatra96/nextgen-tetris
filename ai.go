@@ -110,7 +110,7 @@ func aiMoves() {
 
     currentMino.drop()
 
-    time.Sleep(1*time.Millisecond)
+    time.Sleep(0*time.Millisecond)
 
     refreshScreen()
   }
