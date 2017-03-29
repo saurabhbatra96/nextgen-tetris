@@ -16,11 +16,11 @@ func inSlice(yLines []int, y int) bool {
 
 func aiMoves() {
   // Change the scope of these to global once genetic programming starts.
-  heightMult, lineMult, holeMult := -1,8,-3
+  heightMult, lineMult, holeMult := -1.0,10.0,-2.0
 
   for !clock.gameover {
 
-    maxCost := -1000
+    maxCost := -1000.0
     var optx, opttheta int
 
     for j:=0; j<4; j++ {
@@ -52,12 +52,24 @@ func aiMoves() {
             }
 
             // Check for holes
-            // if cell.y<=16 {
-            //   isBelowCellMino := false
-            //   for _,holeCell := range dstMino.cells() {
-            //
-            //   }
-            // }
+            if cell.y<=16 {
+              isBelowCellMino := false
+              for _,holeCell := range dstMino.cells() {
+                if holeCell.y == cell.y+1 {
+                  isBelowCellMino = true
+                }
+              }
+
+              if !isBelowCellMino && board.colors[cell.x][cell.y+1]==blankColor {
+                // Penalize for depth of hole.
+                for g:=cell.y+1;g<=17;g++ {
+                  numholes++
+                  if board.colors[cell.x][g]!=blankColor {
+                    break
+                  }
+                }
+              }
+            }
 
             // Check if this row is a line.
             yLines := []int{}
@@ -93,7 +105,7 @@ func aiMoves() {
           h = 0
         }
 
-        cost := heightMult*maxHeight + lineMult*numlines + holeMult*numholes
+        cost := heightMult*float64(maxHeight) + lineMult*float64(numlines) + holeMult*float64(numholes)
 
         if cost>maxCost {
           maxCost = cost
