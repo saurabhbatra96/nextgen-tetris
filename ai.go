@@ -4,6 +4,16 @@ import (
   "time"
 )
 
+func inSlice(yLines []int, y int) bool {
+  for i:=0; i < len(yLines); i++ {
+    if y == yLines[i] {
+      return true
+    }
+  }
+
+  return false
+}
+
 func aiMoves() {
   // Change the scope of these to global once genetic programming starts.
   heightMult, lineMult := -1,8
@@ -41,6 +51,7 @@ func aiMoves() {
             }
 
             // Check if this row is a line.
+            yLines := []int{}
             for _, cell := range dstMino.cells() {
               hasLine := true
               for l:=0; l<10; l++ {
@@ -58,8 +69,9 @@ func aiMoves() {
                 }
               }
 
-              if hasLine {
+              if hasLine && !inSlice(yLines,cell.y) {
                 numlines++
+                yLines = append(yLines,cell.y)
               }
             }
           }
