@@ -16,7 +16,7 @@ func inSlice(yLines []int, y int) bool {
 
 func aiMoves() {
   // Change the scope of these to global once genetic programming starts.
-  heightMult, lineMult, holeMult := -1.0,10.0,-2.0
+  heightMult, lineMult, holeMult := -0.5, 10.0, -3.0
 
   for !clock.gameover {
 
@@ -32,23 +32,19 @@ func aiMoves() {
       for i:=0; i<11; i++ {
         dstMino := *currentMino
         dstMino.putBottom()
-        h,maxHeight,numlines,numholes := 0,0,0,0
+        aggrHeight,numlines,numholes := 0,0,0
 
         for k:=0;k<10;k++ {
           for m:=17; m>=0; m-- {
             if board.colors[k][m]!=blankColor {
-              h = 18-m
+              aggrHeight += 18-m
             }
           }
-
-          maxCellHeight := 0
 
           for _, cell := range dstMino.cells() {
             // Check for maxheight
             if cell.x == k {
-              if 18-cell.y > maxCellHeight {
-                maxCellHeight = 18-cell.y
-              }
+              aggrHeight += 18-cell.y
             }
 
             // Check for holes
@@ -95,17 +91,9 @@ func aiMoves() {
               yLines = append(yLines,cell.y)
             }
           }
-          if maxCellHeight > 0 {
-            h = maxCellHeight
-          }
-
-          if h>maxHeight {
-            maxHeight = h
-          }
-          h = 0
         }
 
-        cost := heightMult*float64(maxHeight) + lineMult*float64(numlines) + holeMult*float64(numholes)
+        cost := heightMult*float64(aggrHeight) + lineMult*float64(numlines) + holeMult*float64(numholes)
 
         if cost>maxCost {
           maxCost = cost
@@ -140,9 +128,9 @@ func aiMoves() {
       currentMino.moveRight()
     }
 
-    currentMino.drop()
 
     time.Sleep(0*time.Millisecond)
+    currentMino.drop()
 
     refreshScreen()
   }
