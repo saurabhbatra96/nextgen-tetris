@@ -22,6 +22,9 @@ var (
 	level       int
 	initLevel   int
 	deleteLines int
+	heightMult  float64
+	lineMult		float64
+	holeMult		float64
 )
 
 func initGame() {
@@ -30,6 +33,7 @@ func initGame() {
 	score = 0
 	level = initLevel
 	deleteLines = 0
+
 	refreshScreen()
 }
 
@@ -118,6 +122,20 @@ func gameOver() {
 	clock.lock = false
 }
 
+func setMultipliers(args []string) {
+	if s, err := strconv.ParseFloat(args[0], 64); err == nil {
+		heightMult = s
+	}
+
+	if s, err := strconv.ParseFloat(args[1], 64); err == nil {
+		lineMult = s
+	}
+
+	if s, err := strconv.ParseFloat(args[2], 64); err == nil {
+		holeMult = s
+	}
+}
+
 func main() {
 	err := termbox.Init()
 	if err != nil {
@@ -134,19 +152,11 @@ func main() {
 	})
 
 	initLevel = 1
-	if len(os.Args) > 1 {
-		num, err := strconv.Atoi(os.Args[1])
-		if err != nil {
-			panic(err)
-		}
-		if 0 < num && num < 10 {
-			initLevel = num
-		}
-	}
+
 	initGame()
 	clock.start()
-	// movesList() // Our randomized bot
-	// greedyAiMoves() // Our greedy bot
+
+	setMultipliers(os.Args[1:])
 	aiMoves()
 	// storeScore()
 }

@@ -15,9 +15,6 @@ func inSlice(yLines []int, y int) bool {
 }
 
 func aiMoves() {
-  // Change the scope of these to global once genetic programming starts.
-  heightMult, lineMult, holeMult := -0.5, 10.0, -3.0
-
   for !clock.gameover {
 
     maxCost := -1000.0
